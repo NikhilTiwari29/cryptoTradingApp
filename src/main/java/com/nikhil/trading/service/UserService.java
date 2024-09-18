@@ -2,9 +2,8 @@ package com.nikhil.trading.service;
 
 import com.nikhil.trading.enums.VerificationType;
 import com.nikhil.trading.modal.User;
-import org.springframework.stereotype.Service;
 
-@Service
+
 public interface UserService {
     User findUserByJwt(String JwtToken);
     User findUserByEmail(String email);

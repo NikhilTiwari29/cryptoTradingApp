@@ -6,8 +6,10 @@ import com.nikhil.trading.modal.VerificationCode;
 import com.nikhil.trading.repository.VerificationCodeRepository;
 import com.nikhil.trading.utils.OtpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Service
 public class VerificationServiceImpl implements VerificationService {
 
     @Autowired

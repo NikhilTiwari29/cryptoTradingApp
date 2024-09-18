@@ -5,7 +5,9 @@ import com.nikhil.trading.modal.ForgotPasswordToken;
 import com.nikhil.trading.modal.User;
 import com.nikhil.trading.repository.ForgetPasswordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ForgetPasswordServiceImpl implements ForgetPasswordService {
     @Autowired
     private ForgetPasswordRepository forgetPasswordRepository;

@@ -5,10 +5,12 @@ import com.nikhil.trading.modal.User;
 import com.nikhil.trading.repository.TwoFactorOtpRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Service
 public class TwoFactorOtpServiceImpl implements TwoFactorOtpService {
 
     @Autowired
@@ -27,7 +29,7 @@ public class TwoFactorOtpServiceImpl implements TwoFactorOtpService {
         twoFactorOtp.setId(id);
         twoFactorOtp.setJwtToken(jwtToken);
         twoFactorOtp.setCreatedAt(LocalDateTime.now());
-        twoFactorOtpRepository.save(twoFactorOtp);
+        return twoFactorOtpRepository.save(twoFactorOtp);
     }
 
     @Override

@@ -39,6 +39,8 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-mail")
+	implementation("com.razorpay:razorpay-java:1.4.3")
+	implementation("com.stripe:stripe-java:22.20.0")
 }
 
 tasks.withType<Test> {

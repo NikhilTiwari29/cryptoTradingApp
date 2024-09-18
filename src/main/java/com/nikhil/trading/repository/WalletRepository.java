@@ -1,10 +1,10 @@
 package com.nikhil.trading.repository;
 
-import com.nikhil.trading.modal.User;
+import com.nikhil.trading.modal.Wallet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<User,Long> {
-    User findByEmail(String username);
+public interface WalletRepository extends JpaRepository<Wallet,Long> {
+    Wallet findByUserId(Long userId);
 }
