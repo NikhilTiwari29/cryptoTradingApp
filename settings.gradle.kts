@@ -1,1 +1,1 @@
-rootProject.name = "trading"
+rootProject.name = "trading-backend"

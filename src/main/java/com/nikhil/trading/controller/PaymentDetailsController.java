@@ -1,7 +1,8 @@
 package com.nikhil.trading.controller;
 
-import com.nikhil.trading.modal.PaymentDetails;
-import com.nikhil.trading.modal.User;
+import com.nikhil.trading.exception.UserException;
+import com.nikhil.trading.model.PaymentDetails;
+import com.nikhil.trading.model.User;
 import com.nikhil.trading.service.PaymentDetailsService;
 import com.nikhil.trading.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +23,9 @@ public class PaymentDetailsController {
     @PostMapping("/payment-details")
     public ResponseEntity<PaymentDetails> addPaymentDetails(
             @RequestBody PaymentDetails paymentDetailsRequest,
-            @RequestHeader("Authorization") String jwt) throws Exception {
+            @RequestHeader("Authorization") String jwt) throws UserException {
 
-        User user = userService.findUserByJwt(jwt);
+        User user = userService.findUserProfileByJwt(jwt);
 
         PaymentDetails paymentDetails=paymentDetailsService.addPaymentDetails(
                 paymentDetailsRequest.getAccountNumber(),
@@ -39,9 +40,9 @@ public class PaymentDetailsController {
     @GetMapping("/payment-details")
     public ResponseEntity<PaymentDetails> getUsersPaymentDetails(
 
-            @RequestHeader("Authorization") String jwt) throws Exception {
+            @RequestHeader("Authorization") String jwt) throws UserException {
 
-        User user = userService.findUserByJwt(jwt);
+        User user = userService.findUserProfileByJwt(jwt);
 
         PaymentDetails paymentDetails=paymentDetailsService.getUsersPaymentDetails(user);
         return new ResponseEntity<>(paymentDetails, HttpStatus.CREATED);

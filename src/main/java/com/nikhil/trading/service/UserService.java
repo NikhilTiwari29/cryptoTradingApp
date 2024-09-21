@@ -1,14 +1,29 @@
 package com.nikhil.trading.service;
 
+
 import com.nikhil.trading.enums.VerificationType;
-import com.nikhil.trading.modal.User;
+import com.nikhil.trading.exception.UserException;
+import com.nikhil.trading.model.User;
 
 
 public interface UserService {
-    User findUserByJwt(String JwtToken);
-    User findUserByEmail(String email);
-    User findUserById(Long id);
-    User enableTwoFactorAuthentication(VerificationType verificationType, String sendTo, User user);
-    void updatePassword(User user , String newPassword);
-    public User verifyUser(User user) throws Exception;
+
+	public User findUserProfileByJwt(String jwt) throws UserException;
+	
+	public User findUserByEmail(String email) throws UserException;
+	
+	public User findUserById(Long userId) throws UserException;
+
+	public User verifyUser(User user) throws UserException;
+
+	public User enabledTwoFactorAuthentication(VerificationType verificationType,
+											   String sendTo, User user) throws UserException;
+
+//	public List<User> getPenddingRestaurantOwner();
+
+	User updatePassword(User user, String newPassword);
+
+	void sendUpdatePasswordOtp(String email,String otp);
+
+//	void sendPasswordResetEmail(User user);
 }

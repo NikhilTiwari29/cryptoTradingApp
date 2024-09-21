@@ -1,14 +1,15 @@
 package com.nikhil.trading.service;
 
-import com.nikhil.trading.modal.User;
-import com.nikhil.trading.modal.Withdrawal;
+import com.nikhil.trading.model.User;
+import com.nikhil.trading.model.Withdrawal;
+import lombok.With;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public interface WithdrawalService {
-    Withdrawal requestWithdrawal(BigDecimal amount, User user);
-    Withdrawal proccedWithdrawal(Long withdrawalId,boolean accept) throws Exception;
-    List<Withdrawal> getUserWithdrawalHistory(User user);
+
+    Withdrawal requestWithdrawal(Long amount,User user);
+    Withdrawal procedWithdrawal(Long withdrawalId,boolean accept) throws Exception;
+    List<Withdrawal> getUsersWithdrawalHistory(User user);
     List<Withdrawal> getAllWithdrawalRequest();
 }

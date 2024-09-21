@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nikhil.trading.modal.Coin;
+import com.nikhil.trading.model.Coin;
 import com.nikhil.trading.repository.CoinRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,47 +17,55 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
+
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CoinServiceImpl implements CoinService {
+public class CoinServiceImpl implements CoinService{
     @Autowired
     private CoinRepository coinRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
 
+
     @Value("${coingecko.api.key}")
     private String API_KEY;
 
+
+
     @Override
-    public List<Coin> getCoinList(String currency,int page) throws Exception {
-        String url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=" + currency + "&per_page=10&page=" + page;
+    public List<Coin> getCoinList(int page) throws Exception {
+        String url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=10&page="+page;
+
 
         RestTemplate restTemplate = new RestTemplate();
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.set("x-cg-demo-api-key", API_KEY);
 
+
             HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
-            return objectMapper.readValue(response.getBody(), new TypeReference<List<Coin>>() {});
+            System.out.println(response.getBody());
+            List<Coin> coins = objectMapper.readValue(response.getBody(), new TypeReference<List<Coin>>() {});
 
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
-            System.err.println("HTTP Error: " + e.getMessage());
-            throw new Exception("Please wait for a moment; you might be using a free plan.");
-        } catch (JsonProcessingException e) {
-            System.err.println("JSON Parsing Error: " + e.getMessage());
-            throw new Exception("Error processing response.");
+            return coins;
+
+        } catch (HttpClientErrorException | HttpServerErrorException | JsonProcessingException e) {
+            System.err.println("Error: " + e);
+            // Handle error accordingly
+            throw new Exception("please wait for time because you are using free plan");
         }
+
     }
 
     @Override
     public String getMarketChart(String coinId, int days) throws Exception {
-        String url = "https://api.coingecko.com/api/v3/coins/" + coinId + "/market_chart?vs_currency=usd&days=" + days;
+        String url = "https://api.coingecko.com/api/v3/coins/"+coinId+"/market_chart?vs_currency=usd&days="+days;
 
         RestTemplate restTemplate = new RestTemplate();
         try {
@@ -71,25 +79,50 @@ public class CoinServiceImpl implements CoinService {
             return response.getBody();
 
         } catch (HttpClientErrorException | HttpServerErrorException e) {
-            throw new Exception("You might be using a free plan.");
+            System.err.println("Error: " + e);
+            // Handle error accordingly
+//            return null;
+            throw new Exception("you are using free plan");
+        }
+
+    }
+
+    private double convertToDouble(Object value) {
+        if (value instanceof Integer) {
+            return ((Integer) value).doubleValue();
+        } else if (value instanceof Long) {
+            return ((Long) value).doubleValue();
+        } else if (value instanceof Double) {
+            return (Double) value;
+        } else {
+            throw new IllegalArgumentException("Unsupported data type: " + value.getClass().getName());
         }
     }
 
     @Override
     public String getCoinDetails(String coinId) throws JsonProcessingException {
-        String baseUrl = "https://api.coingecko.com/api/v3/coins/" + coinId;
 
+        String baseUrl ="https://api.coingecko.com/api/v3/coins/"+coinId;
+
+        System.out.println("------------------ get coin details base url "+baseUrl);
         HttpHeaders headers = new HttpHeaders();
         headers.set("x-cg-demo-api-key", API_KEY);
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
+
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(baseUrl, HttpMethod.GET, entity, String.class);
 
+//        Coin coins = objectMapper.readValue(response.getBody(), new TypeReference<>() {
+//        });
+//        coinRepository.save(coins);
         JsonNode jsonNode = objectMapper.readTree(response.getBody());
+        jsonNode.get("image").get("large");
+        System.out.println(jsonNode.get("image").get("large"));
 
         Coin coin = new Coin();
+
         coin.setId(jsonNode.get("id").asText());
         coin.setSymbol(jsonNode.get("symbol").asText());
         coin.setName(jsonNode.get("name").asText());
@@ -115,30 +148,32 @@ public class CoinServiceImpl implements CoinService {
     }
 
     @Override
-    public Coin findById(String coinId) throws Exception {
+    public Coin findById(String coinId) throws Exception{
         Optional<Coin> optionalCoin = coinRepository.findById(coinId);
-        if (optionalCoin.isEmpty())
-            throw new Exception("Invalid coin ID.");
-        return optionalCoin.get();
+        if(optionalCoin.isEmpty()) throw new Exception("invalid coin id");
+        return  optionalCoin.get();
     }
 
     @Override
     public String searchCoin(String keyword) {
-        String baseUrl = "https://api.coingecko.com/api/v3/search?query=" + keyword;
+        String baseUrl ="https://api.coingecko.com/api/v3/search?query="+keyword;
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("x-cg-demo-api-key", API_KEY);
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
+
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(baseUrl, HttpMethod.GET, entity, String.class);
+
+        System.out.println(response.getBody());
 
         return response.getBody();
     }
 
     @Override
-    public String getTop50CoinByMarketCapRank() throws Exception {
+    public String getTop50CoinsByMarketCapRank() {
         String url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&page=1&per_page=50";
 
         RestTemplate restTemplate = new RestTemplate();
@@ -153,12 +188,15 @@ public class CoinServiceImpl implements CoinService {
             return response.getBody();
 
         } catch (HttpClientErrorException | HttpServerErrorException e) {
-            throw new Exception(e.getMessage());
+            System.err.println("Error: " + e);
+            // Handle error accordingly
+            return null;
         }
+
     }
 
     @Override
-    public String getTrendingCoin() throws Exception {
+    public String getTreadingCoins() {
         String url = "https://api.coingecko.com/api/v3/search/trending";
 
         RestTemplate restTemplate = new RestTemplate();
@@ -173,7 +211,9 @@ public class CoinServiceImpl implements CoinService {
             return response.getBody();
 
         } catch (HttpClientErrorException | HttpServerErrorException e) {
-            throw new Exception(e.getMessage());
+            System.err.println("Error: " + e);
+            // Handle error accordingly
+            return null;
         }
     }
 }

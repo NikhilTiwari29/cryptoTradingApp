@@ -1,13 +1,12 @@
 package com.nikhil.trading.service;
 
 import com.nikhil.trading.enums.WalletTransactionType;
-import com.nikhil.trading.modal.Wallet;
-import com.nikhil.trading.modal.WalletTransaction;
+import com.nikhil.trading.model.Wallet;
+import com.nikhil.trading.model.WalletTransaction;
 import com.nikhil.trading.repository.WalletTransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -19,11 +18,11 @@ public class WalletTransactionServiceImpl implements WalletTransactionService{
 
 
     @Override
-    public void createTransaction(Wallet wallet,
-                                  WalletTransactionType type,
-                                  String transferId,
-                                  String purpose,
-                                  BigDecimal amount
+    public WalletTransaction createTransaction(Wallet wallet,
+                                               WalletTransactionType type,
+                                               String transferId,
+                                               String purpose,
+                                               Long amount
     ) {
         WalletTransaction transaction = new WalletTransaction();
         transaction.setWallet(wallet);
@@ -33,7 +32,7 @@ public class WalletTransactionServiceImpl implements WalletTransactionService{
         transaction.setPurpose(purpose);
         transaction.setAmount(amount);
 
-        walletTransactionRepository.save(transaction);
+        return walletTransactionRepository.save(transaction);
     }
 
     @Override

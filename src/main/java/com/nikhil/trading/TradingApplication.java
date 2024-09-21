@@ -1,4 +1,4 @@
-package com.nikhil.trading.trading;
+package com.nikhil.trading;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

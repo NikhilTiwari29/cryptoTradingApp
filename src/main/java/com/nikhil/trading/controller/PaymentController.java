@@ -1,10 +1,9 @@
 package com.nikhil.trading.controller;
 
-
-
 import com.nikhil.trading.enums.PaymentMethod;
-import com.nikhil.trading.modal.PaymentOrder;
-import com.nikhil.trading.modal.User;
+import com.nikhil.trading.exception.UserException;
+import com.nikhil.trading.model.PaymentOrder;
+import com.nikhil.trading.model.User;
 import com.nikhil.trading.response.PaymentResponse;
 import com.nikhil.trading.service.PaymentService;
 import com.nikhil.trading.service.UserService;
@@ -33,9 +32,9 @@ public class PaymentController {
     public ResponseEntity<PaymentResponse> paymentHandler(
             @PathVariable PaymentMethod paymentMethod,
             @PathVariable Long amount,
-            @RequestHeader("Authorization") String jwt) throws Exception, RazorpayException, StripeException {
+            @RequestHeader("Authorization") String jwt) throws UserException, RazorpayException, StripeException {
 
-        User user = userService.findUserByJwt(jwt);
+        User user = userService.findUserProfileByJwt(jwt);
 
         PaymentResponse paymentResponse;
 

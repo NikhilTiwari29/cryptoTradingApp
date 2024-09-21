@@ -1,7 +1,8 @@
 package com.nikhil.trading.service;
 
-import com.nikhil.trading.modal.PaymentDetails;
-import com.nikhil.trading.modal.User;
+import com.nikhil.trading.model.PaymentDetails;
+import com.nikhil.trading.model.User;
+import jakarta.persistence.OneToOne;
 
 public interface PaymentDetailsService {
     public PaymentDetails addPaymentDetails( String accountNumber,

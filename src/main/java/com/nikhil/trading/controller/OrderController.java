@@ -1,14 +1,12 @@
 package com.nikhil.trading.controller;
 
-import com.nikhil.trading.enums.OrderType;
-import com.nikhil.trading.modal.Coin;
-import com.nikhil.trading.modal.Order;
-import com.nikhil.trading.modal.User;
-import com.nikhil.trading.request.CreateOrderRequest;
+import com.nikhil.trading.model.Coin;
+import com.nikhil.trading.model.Order;
+import com.nikhil.trading.model.User;
 import com.nikhil.trading.service.CoinService;
 import com.nikhil.trading.service.OrderService;
 import com.nikhil.trading.service.UserService;
-import com.nikhil.trading.service.WalletService;
+import com.nikhil.trading.service.WalletTransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,33 +17,37 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
-
-    @Autowired
     private OrderService orderService;
 
-    @Autowired
-    private UserService userService;
+    private UserService userSerivce;
 
     @Autowired
     private CoinService coinService;
 
     @Autowired
-    private WalletService walletTransactionService;
+    private WalletTransactionService walletTransactionService;
 
+//    private
+
+    @Autowired
+    public OrderController(OrderService orderService, UserService userSerivce) {
+        this.orderService = orderService;
+        this.userSerivce=userSerivce;
+    }
 
     @PostMapping("/pay")
     public ResponseEntity<Order> payOrderPayment(
             @RequestHeader("Authorization") String jwt,
-            @RequestBody CreateOrderRequest req
+            @RequestBody com.nikhil.trading.request.CreateOrderRequest req
 
     ) throws Exception {
-        User user = userService.findUserByJwt(jwt);
+        User user = userSerivce.findUserProfileByJwt(jwt);
         Coin coin =coinService.findById(req.getCoinId());
 
 
-        Order order = orderService.processOrder(coin,req.getQuantity(),req.getOrderType(),user);
+            Order order = orderService.processOrder(coin,req.getQuantity(),req.getOrderType(),user);
 
-        return ResponseEntity.ok(order);
+            return ResponseEntity.ok(order);
 
     }
 
@@ -58,7 +60,7 @@ public class OrderController {
             throw new Exception("token missing...");
         }
 
-        User user = userService.findUserByJwt(jwtToken);
+        User user = userSerivce.findUserProfileByJwt(jwtToken);
 
         Order order = orderService.getOrderById(orderId);
         if (order.getUser().getId().equals(user.getId())) {
@@ -71,14 +73,14 @@ public class OrderController {
     @GetMapping()
     public ResponseEntity<List<Order>> getAllOrdersForUser(
             @RequestHeader("Authorization") String jwtToken,
-            @RequestParam(required = false) OrderType order_type,
+            @RequestParam(required = false) String order_type,
             @RequestParam(required = false) String asset_symbol
     ) throws Exception {
         if (jwtToken == null) {
             throw new Exception("token missing...");
         }
 
-        Long userId = userService.findUserByJwt(jwtToken).getId();
+        Long userId = userSerivce.findUserProfileByJwt(jwtToken).getId();
 
         List<Order> userOrders = orderService.getAllOrdersForUser(userId,order_type,asset_symbol);
         return ResponseEntity.ok(userOrders);

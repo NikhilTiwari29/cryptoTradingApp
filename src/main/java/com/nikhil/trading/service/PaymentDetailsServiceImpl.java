@@ -1,9 +1,8 @@
 package com.nikhil.trading.service;
 
-import com.nikhil.trading.modal.PaymentDetails;
-import com.nikhil.trading.modal.User;
+import com.nikhil.trading.model.PaymentDetails;
+import com.nikhil.trading.model.User;
 import com.nikhil.trading.repository.PaymentDetailsRepository;
-import com.nikhil.trading.service.PaymentDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

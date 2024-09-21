@@ -1,17 +1,19 @@
 package com.nikhil.trading.service;
 
-import com.nikhil.trading.modal.Asset;
-import com.nikhil.trading.modal.Coin;
-import com.nikhil.trading.modal.User;
+
+
+import com.nikhil.trading.model.Asset;
+import com.nikhil.trading.model.Coin;
+import com.nikhil.trading.model.User;
 
 import java.util.List;
 
 public interface AssetService {
     Asset createAsset(User user, Coin coin, double quantity);
 
-    Asset getAssetById(Long assetId) throws Exception;
+    Asset getAssetById(Long assetId);
 
-    Asset getAssetByUserAndId(Long userId,Long assetId) throws Exception;
+    Asset getAssetByUserAndId(Long userId,Long assetId);
 
     List<Asset> getUsersAssets(Long userId);
 
@@ -20,4 +22,6 @@ public interface AssetService {
     Asset findAssetByUserIdAndCoinId(Long userId,String coinId) throws Exception;
 
     void deleteAsset(Long assetId);
+
+
 }

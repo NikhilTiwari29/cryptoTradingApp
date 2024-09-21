@@ -2,8 +2,8 @@ package com.nikhil.trading.service;
 
 import com.nikhil.trading.enums.PaymentMethod;
 import com.nikhil.trading.enums.PaymentOrderStatus;
-import com.nikhil.trading.modal.PaymentOrder;
-import com.nikhil.trading.modal.User;
+import com.nikhil.trading.model.PaymentOrder;
+import com.nikhil.trading.model.User;
 import com.nikhil.trading.repository.PaymentOrderRepository;
 import com.nikhil.trading.response.PaymentResponse;
 import com.razorpay.Payment;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class PaymentServiceImpl implements PaymentService {
+public class PaymentServiceImpl implements PaymentService{
 
     @Value("${stripe.api.key}")
     private String stripeSecretKey;
@@ -38,7 +38,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 
     @Override
-    public PaymentOrder createOrder(User user, Long amount, PaymentMethod paymentMethod) {
+    public PaymentOrder createOrder(User user, Long amount, com.nikhil.trading.enums.PaymentMethod paymentMethod) {
         PaymentOrder order=new PaymentOrder();
         order.setUser(user);
         order.setAmount(amount);
@@ -56,7 +56,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Boolean proceedPaymentOrder(PaymentOrder paymentOrder,String paymentId) throws RazorpayException {
+    public Boolean ProccedPaymentOrder(PaymentOrder paymentOrder,String paymentId) throws RazorpayException {
         if(paymentOrder.getStatus().equals(PaymentOrderStatus.PENDING)){
 
             if(paymentOrder.getPaymentMethod().equals(PaymentMethod.RAZORPAY)){

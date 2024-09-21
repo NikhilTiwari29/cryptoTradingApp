@@ -1,50 +1,56 @@
 package com.nikhil.trading.service;
 
 import com.nikhil.trading.enums.VerificationType;
-import com.nikhil.trading.modal.User;
-import com.nikhil.trading.modal.VerificationCode;
-import com.nikhil.trading.repository.VerificationCodeRepository;
-import com.nikhil.trading.utils.OtpUtils;
+import com.nikhil.trading.model.User;
+import com.nikhil.trading.model.VerificationCode;
+import com.nikhil.trading.repository.VerificationRepository;
+import com.zosh.utils.OtpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
-public class VerificationServiceImpl implements VerificationService {
+public class VerificationServiceImpl implements VerificationService{
 
     @Autowired
-    private VerificationCodeRepository verificationCodeRepository;
+    private VerificationRepository verificationRepository;
 
     @Override
-    @Transactional
     public VerificationCode sendVerificationOTP(User user, VerificationType verificationType) {
+
         VerificationCode verificationCode = new VerificationCode();
-        verificationCode.setOtp(OtpUtils.generateOtp());
-        verificationCode.setVerificationType(verificationType);
+
+        verificationCode.setOtp(OtpUtils.generateOTP());
         verificationCode.setUser(user);
-        return verificationCodeRepository.save(verificationCode);
+        verificationCode.setVerificationType(verificationType);
+
+        return verificationRepository.save(verificationCode);
     }
 
     @Override
-    public VerificationCode findVerificationById(Long userId) throws  Exception {
-        return verificationCodeRepository.findById(userId)
-                .orElseThrow(() -> new Exception("Verification code not found with userId: " + userId));
+    public VerificationCode findVerificationById(Long id) throws Exception {
+        Optional<VerificationCode> verificationCodeOption=verificationRepository.findById(id);
+        if(verificationCodeOption.isEmpty()){
+            throw new Exception("verification not found");
+        }
+        return verificationCodeOption.get();
     }
 
     @Override
-    public VerificationCode findUsersVerification(Long userId) throws Exception {
-        return verificationCodeRepository.findByUserId(userId);
+    public VerificationCode findUsersVerification(User user) throws Exception {
+        return verificationRepository.findByUserId(user.getId());
     }
 
     @Override
-    public Boolean verifyOtp(String opt, VerificationCode verificationCode) {
-        return verificationCode != null && opt.equals(verificationCode.getOtp());
+    public Boolean VerifyOtp(String opt, VerificationCode verificationCode) {
+        return opt.equals(verificationCode.getOtp());
     }
-
 
     @Override
-    @Transactional
-    public void deleteVerificationCode(VerificationCode verificationCode) {
-        verificationCodeRepository.delete(verificationCode);
+    public void deleteVerification(VerificationCode verificationCode) {
+        verificationRepository.delete(verificationCode);
     }
+
+
 }

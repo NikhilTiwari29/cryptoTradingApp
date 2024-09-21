@@ -1,6 +1,6 @@
 package com.nikhil.trading.repository;
 
-import com.nikhil.trading.modal.Withdrawal;
+import com.nikhil.trading.model.Withdrawal;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

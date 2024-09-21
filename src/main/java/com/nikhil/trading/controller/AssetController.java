@@ -1,10 +1,10 @@
 package com.nikhil.trading.controller;
 
-import com.nikhil.trading.modal.Asset;
-import com.nikhil.trading.modal.User;
+import com.nikhil.trading.exception.UserException;
+import com.nikhil.trading.model.Asset;
+import com.nikhil.trading.model.User;
 import com.nikhil.trading.service.AssetService;
 import com.nikhil.trading.service.UserService;
-import jdk.jshell.spi.ExecutionControl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +24,7 @@ public class AssetController {
     }
 
     @GetMapping("/{assetId}")
-    public ResponseEntity<Asset> getAssetById(@PathVariable Long assetId) throws Exception {
+    public ResponseEntity<Asset> getAssetById(@PathVariable Long assetId) {
         Asset asset = assetService.getAssetById(assetId);
         return ResponseEntity.ok().body(asset);
     }
@@ -35,7 +35,7 @@ public class AssetController {
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
 
-        User user=userService.findUserByJwt(jwt);
+        User user=userService.findUserProfileByJwt(jwt);
         Asset asset = assetService.findAssetByUserIdAndCoinId(user.getId(), coinId);
         return ResponseEntity.ok().body(asset);
     }
@@ -43,8 +43,8 @@ public class AssetController {
     @GetMapping()
     public ResponseEntity<List<Asset>> getAssetsForUser(
             @RequestHeader("Authorization") String jwt
-    ){
-        User user=userService.findUserByJwt(jwt);
+    ) throws UserException {
+        User user=userService.findUserProfileByJwt(jwt);
         List<Asset> assets = assetService.getUsersAssets(user.getId());
         return ResponseEntity.ok().body(assets);
     }

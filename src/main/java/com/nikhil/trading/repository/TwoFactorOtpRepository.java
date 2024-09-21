@@ -1,10 +1,9 @@
 package com.nikhil.trading.repository;
 
-import com.nikhil.trading.modal.TwoFactorOtp;
+import com.nikhil.trading.model.TwoFactorOTP;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public interface TwoFactorOtpRepository extends JpaRepository<TwoFactorOtp,String> {
-    TwoFactorOtp findByUserId(Long userId);
+public interface TwoFactorOtpRepository extends JpaRepository<TwoFactorOTP,String> {
+
+    TwoFactorOTP findByUserId(Long userId);
 }

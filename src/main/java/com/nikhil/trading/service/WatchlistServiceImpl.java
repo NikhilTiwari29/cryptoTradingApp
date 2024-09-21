@@ -1,8 +1,8 @@
 package com.nikhil.trading.service;
 
-import com.nikhil.trading.modal.Coin;
-import com.nikhil.trading.modal.User;
-import com.nikhil.trading.modal.Watchlist;
+import com.nikhil.trading.model.Coin;
+import com.nikhil.trading.model.User;
+import com.nikhil.trading.model.Watchlist;
 import com.nikhil.trading.repository.WatchlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class WatchlistServiceImpl implements WatchlistService {
+public class WatchlistServiceImpl implements WatchlistService{
     @Autowired
     private WatchlistRepository watchlistRepository;
 
@@ -41,7 +41,7 @@ public class WatchlistServiceImpl implements WatchlistService {
     }
 
     @Override
-    public Coin addItemToWatchlist(Coin coin, User user) throws Exception {
+    public Coin addItemToWatchlist(Coin coin,User user) throws Exception {
         Watchlist watchlist=findUserWatchlist(user.getId());
 
         if(watchlist.getCoins().contains(coin)){

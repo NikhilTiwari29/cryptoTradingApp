@@ -1,27 +1,25 @@
-package com.nikhil.trading.utils;
+package com.zosh.utils;
 
-import java.security.SecureRandom;
+import java.util.Random;
 
 public class OtpUtils {
 
-    // Define the length of the OTP
-    private static final int OTP_LENGTH = 6;
+    public static String generateOTP() {
 
-    // Characters to use for OTP generation
-    private static final String OTP_CHARS = "0123456789";
+        int otpLength = 6;
 
-    // Create an instance of SecureRandom
-    private static final SecureRandom RANDOM = new SecureRandom();
 
-    /**
-     * Generate a random OTP of the specified length.
-     * @return Generated OTP as a String.
-     */
-    public static String generateOtp() {
-        StringBuilder otp = new StringBuilder(OTP_LENGTH);
-        for (int i = 0; i < OTP_LENGTH; i++) {
-            otp.append(OTP_CHARS.charAt(RANDOM.nextInt(OTP_CHARS.length())));
+        Random random = new Random();
+
+
+        StringBuilder otp = new StringBuilder(otpLength);
+
+
+        for (int i = 0; i < otpLength; i++) {
+            otp.append(random.nextInt(10));
+
         }
+
         return otp.toString();
     }
 }

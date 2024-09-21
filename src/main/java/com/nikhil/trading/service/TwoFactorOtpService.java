@@ -1,12 +1,18 @@
 package com.nikhil.trading.service;
 
-import com.nikhil.trading.modal.TwoFactorOtp;
-import com.nikhil.trading.modal.User;
+import com.nikhil.trading.model.TwoFactorOTP;
+import com.nikhil.trading.model.User;
 
 public interface TwoFactorOtpService {
-    TwoFactorOtp createTwofactorOtp(User user, String otp, String jwtToken);
-    TwoFactorOtp findByUser(Long userId);
-    TwoFactorOtp findById(String id);
-    boolean verifyTwoFactorOtp(TwoFactorOtp twoFactorOtp,String otp);
-    void deleteTwoFactorOtp(TwoFactorOtp twoFactorOtp);
+
+    TwoFactorOTP createTwoFactorOtp(User user, String otp, String jwt);
+
+    TwoFactorOTP findByUser(Long userId);
+
+    TwoFactorOTP findById(String id);
+
+    boolean verifyTwoFactorOtp(TwoFactorOTP twoFactorOtp,String otp);
+
+    void deleteTwoFactorOtp(TwoFactorOTP twoFactorOTP);
+
 }

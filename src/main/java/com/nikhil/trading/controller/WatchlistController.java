@@ -1,9 +1,9 @@
 package com.nikhil.trading.controller;
 
-
-import com.nikhil.trading.modal.Coin;
-import com.nikhil.trading.modal.User;
-import com.nikhil.trading.modal.Watchlist;
+import com.nikhil.trading.exception.UserException;
+import com.nikhil.trading.model.Coin;
+import com.nikhil.trading.model.User;
+import com.nikhil.trading.model.Watchlist;
 import com.nikhil.trading.service.CoinService;
 import com.nikhil.trading.service.UserService;
 import com.nikhil.trading.service.WatchlistService;
@@ -32,7 +32,7 @@ public class WatchlistController {
     public ResponseEntity<Watchlist> getUserWatchlist(
             @RequestHeader("Authorization") String jwt) throws Exception {
 
-            User user=userService.findUserByJwt(jwt);
+            User user=userService.findUserProfileByJwt(jwt);
             Watchlist watchlist = watchlistService.findUserWatchlist(user.getId());
             return ResponseEntity.ok(watchlist);
 
@@ -40,8 +40,8 @@ public class WatchlistController {
 
     @PostMapping("/create")
     public ResponseEntity<Watchlist> createWatchlist(
-            @RequestHeader("Authorization") String jwt){
-        User user=userService.findUserByJwt(jwt);
+            @RequestHeader("Authorization") String jwt) throws UserException {
+        User user=userService.findUserProfileByJwt(jwt);
         Watchlist createdWatchlist = watchlistService.createWatchList(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdWatchlist);
     }
@@ -61,7 +61,7 @@ public class WatchlistController {
             @PathVariable String coinId) throws Exception {
 
 
-            User user=userService.findUserByJwt(jwt);
+            User user=userService.findUserProfileByJwt(jwt);
             Coin coin=coinService.findById(coinId);
             Coin addedCoin = watchlistService.addItemToWatchlist(coin, user);
             return ResponseEntity.ok(addedCoin);
